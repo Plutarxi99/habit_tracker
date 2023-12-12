@@ -55,6 +55,9 @@
 * После установки нужных настроук в файле **<.env>**. Надо выполнить команду для установки пакетов:
   <pre><code>pip install -r requirements.txt </code></pre>
 
+* Применить миграции:
+  <pre><code>python3 manage.py migrate</code></pre>
+
 * Создать суперюзера:
   <pre><code>python3 manage.py ccsu</code></pre>
 
