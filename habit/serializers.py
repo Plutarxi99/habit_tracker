@@ -1,9 +1,11 @@
+from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer
 
 from habit.models import Habit
 from habit.services import MixinListSerializer
-from habit.validators import TimeRunValidator, RelatedAwardValidator, IsPrettyValidator, RelatedValidator
+from habit.validators import TimeRunValidator, RelatedAwardValidator, IsPrettyValidator, RelatedValidator, \
+    EveryRunValidator, EveryRunValidatorUpdate
 from users.models import User
 
 
@@ -14,24 +16,31 @@ class HabitSerializer(ModelSerializer):
 
 
 class HabitCreateSerializer(ModelSerializer):
-
-    # def is_valid(self, *, raise_exception=False):
-    #     # dict(self)['user'] = self.context.items()
-    #     print(self.context.get('user'))
-    #     super().is_valid()
-
-    # def save(self, **kwargs):
-    #     self.validated_data['user'] = self.r
-    #     super().save(**kwargs)
+    # сохранение пользователя как создателя
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Habit
         fields = '__all__'
         validators = [
-            TimeRunValidator(field='time_run'),
+            TimeRunValidator(obj='self'),
             RelatedValidator(obj='self'),
             RelatedAwardValidator(obj='self'),
-            IsPrettyValidator(obj='self')
+            IsPrettyValidator(obj='self'),
+            EveryRunValidator(obj='self')
+        ]
+
+
+class HabitUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Habit
+        fields = '__all__'
+        validators = [
+            TimeRunValidator(obj='self'),
+            RelatedValidator(obj='self'),
+            RelatedAwardValidator(obj='self'),
+            IsPrettyValidator(obj='self'),
+            EveryRunValidatorUpdate(obj='self')
         ]
 
 

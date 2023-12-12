@@ -1,11 +1,14 @@
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
 class Habit(models.Model):
+    MINUTES = 'minutes'
     HOURS = 'hours'
     DAYS = 'days'
     PERIOD = [
+        ('minutes', 'minutes'),
         ('hours', 'hours'),
         ('days', 'days'),
     ]
@@ -21,6 +24,9 @@ class Habit(models.Model):
     time_to_do = models.DateTimeField(verbose_name='время, когда необходимо выполнять привычку')
     time_run = models.TimeField(default=0, verbose_name='время на выполнение')
     period = models.CharField(choices=PERIOD, default=DAYS, verbose_name='периодичность')
+    every_run = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10080)],
+                                            verbose_name='запуск будет каждый указанный промежуток')
+    is_active_notif = models.BooleanField(default=True, verbose_name='включение и отключение уведомление')
 
     class Meta:
         verbose_name = 'условия привычки'

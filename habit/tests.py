@@ -1,50 +1,25 @@
+from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from habit.models import Habit
+from habit.services import MixinTestCaseCreateUser
 from users.models import User
 
 
-class HabitTestCase(APITestCase):
+class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
     password = 'testpassword'
     email = 'test@test.test'
     email_1 = 'test_1@test.test'
     email_2 = 'test_2@test.test'
     email_3 = 'test_3@test.test'
 
-    def create_user(self, email, password):
-        user, created = User.objects.get_or_create(
-            email=email,
-            is_active=True,
-            chat_id_tg='534346799'
-        )
-        if created or not user.check_password(password):
-            user.set_password(password)
-            user.save()
-
-        # user = User.objects.last()
-
-        data = {
-            "email": email,
-            "password": password
-        }
-
-        response = self.client.post(
-            reverse('users:token_obtain_pair'),
-            data=data
-        )
-        token = response.json()['access']
-        return {
-            "user": user,
-            "token": token
-        }
-
     def setUp(self):
         user, created = User.objects.get_or_create(
             email=self.email,
             is_active=True,
-            chat_id_tg='534346799'
+            chat_id_tg=settings.CHAT_ID_TG_TEST
         )
         if created or not user.check_password(self.password):
             user.set_password(self.password)
@@ -71,6 +46,7 @@ class HabitTestCase(APITestCase):
             time_run="00:01:40",
             period="days",
             user=self.user,
+            every_run=1
             # related=''
         )
         self.habit_pretty = Habit.objects.create(
@@ -83,6 +59,7 @@ class HabitTestCase(APITestCase):
             time_run="00:01:40",
             period="days",
             user=self.user,
+            every_run=1
             # related=''
         )
         self.habit_related = Habit.objects.create(
@@ -95,35 +72,37 @@ class HabitTestCase(APITestCase):
             time_run="00:01:40",
             period="days",
             user=self.user,
-            related=self.habit_pretty
+            related=self.habit_pretty,
+            every_run=1
         )
 
-    # def test_habit_create(self):
-    #     """Создание новой привычки"""
-    #     user_data = self.create_user(email=self.email_1, password=self.password)
-    #     data = {
-    #         "is_pretty": False,
-    #         "award": "яблоко",
-    #         "is_public": True,
-    #         "location": "двор тест",
-    #         "action_to_do": "чистка проверка снега",
-    #         "time_to_do": "2028-11-18T21:36:00Z",
-    #         "time_run": "00:01:40",
-    #         "period": "days",
-    #         # "user": user_data['user']
-    #         # "related": self.habit
-    #     }
-    #
-    #     response = self.client.post(
-    #         reverse('habit:habit_create'),
-    #         # '/habit/create/',
-    #         data=data,
-    #         headers={'Authorization': 'Bearer {}'.format(user_data['token'])}
-    #     )
-    #     self.assertEquals(
-    #         response.status_code,
-    #         status.HTTP_201_CREATED
-    #     )
+    def test_habit_create(self):
+        """Создание новой привычки"""
+        user_data = self.create_user(email=self.email_1, password=self.password)
+        data = {
+            "is_pretty": False,
+            "award": "яблоко",
+            "is_public": True,
+            "location": "двор тест",
+            "action_to_do": "чистка проверка снега",
+            "time_to_do": "2028-11-18T21:36:00Z",
+            "time_run": "00:01:40",
+            "period": "days",
+            "every_run": 1
+            # "user": user_data['user']
+            # "related": self.habit
+        }
+
+        response = self.client.post(
+            reverse('habit:habit_create'),
+            # '/habit/create/',
+            data=data,
+            headers={'Authorization': 'Bearer {}'.format(user_data['token'])}
+        )
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_201_CREATED
+        )
 
     def test_habit_public_list(self):
         """ Тестирование списка опубликованных привычек"""
@@ -154,6 +133,7 @@ class HabitTestCase(APITestCase):
             time_run="00:01:40",
             period="days",
             user=user_data_my['user'],
+            every_run=1
             # related=''
         )
 
@@ -171,14 +151,6 @@ class HabitTestCase(APITestCase):
             1
         )
 
-        # self.assertEquals(
-        #     response.json(),
-        #     {'count': 1, 'next': None, 'previous': None, 'results': [
-        #         {'id': 4, 'user': 'test_2@test.test', 'is_pretty': False, 'award': 'тест ОК', 'is_public': False,
-        #          'location': 'двор тест', 'action_to_do': 'тест действия', 'time_to_do': '18.11.2028 21:36:00',
-        #          'time_run': 100, 'period': 'days', 'related': None}]}
-        # )
-
     def test_my_habit_destroy(self):
         """ Тестирование удаление привычки"""
 
@@ -194,6 +166,7 @@ class HabitTestCase(APITestCase):
             time_run="00:01:40",
             period="days",
             user=user_data_des['user'],
+            every_run=1
             # related=''
         )
         pk = habit_pk_4.id
@@ -234,6 +207,7 @@ class HabitTestCase(APITestCase):
             time_run="00:01:40",
             period="days",
             user=user_data_upd['user'],
+            every_run=1
             # related=''
         )
 
@@ -249,12 +223,6 @@ class HabitTestCase(APITestCase):
             response.status_code,
             status.HTTP_200_OK
         )
-        # self.assertEquals(
-        #     response.json(),
-        #     {'is_pretty': False, 'award': 'тест ОК', 'is_public': False, 'location': 'двор тест',
-        #      'action_to_do': 'обновление', 'time_to_do': '2028-11-18T21:36:00Z', 'time_run': '00:01:40',
-        #      'period': 'days', 'related': None}
-        # )
 
     def test_alien_habit_update(self):
         """Тестирование обновление чужой привычки"""
