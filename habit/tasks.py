@@ -1,4 +1,5 @@
 from celery import shared_task
+from requests import RequestException
 
 from habit.models import Habit
 from habit.schedules import set_time_notif_tg
@@ -24,7 +25,9 @@ def set_send_notif_telegram(pk_habit: int) -> None:
     location = habit['location']
     period = habit['period']
     every_run = habit['every_run']
-    award = habit['award']
+    award = ''
+    if habit['award']:
+        award = habit['award']
     is_active_notif = habit['is_active_notif']
     # is_pretty = habit['is_pretty']
     text = f"Я буду {action_to_do}{award} в {start_time.strftime('%d.%m.%Y %H:%M:%S')} в течении {time_run} в {location}"
@@ -32,8 +35,12 @@ def set_send_notif_telegram(pk_habit: int) -> None:
                       every_run=every_run, is_active_notif=is_active_notif)
 
 
-@shared_task(bind=True)
-def run_send_notif_telegram(self, text: str, chat_id_tg: str) -> None:
+@shared_task(
+    autoretry_for=(RequestException, TimeoutError),
+    retry_backoff=True,
+    max_retries=3,
+)
+def run_send_notif_telegram(text: str, chat_id_tg: str) -> None:
     """
     Отправка сообщений в указанный чат и привычкой, которая указана
     @param self: ???
@@ -41,5 +48,5 @@ def run_send_notif_telegram(self, text: str, chat_id_tg: str) -> None:
     @param chat_id_tg: куда отправится сообщение
     @return:
     """
-    bot = MyBot(text=text, chat_id=chat_id_tg)
-    bot.send_message()
+    bot = MyBot()
+    bot.send_message(text=text, chat_id=chat_id_tg)

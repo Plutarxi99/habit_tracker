@@ -45,34 +45,31 @@ class MyBot:
     URL = 'https://api.telegram.org/bot'
     TOKEN = settings.TELEGRAM_TOKEN
 
-    def __init__(self, text, chat_id):
+    def __init__(self, text=None, chat_id=None):
         self.text = text
         self.chat_id = chat_id
 
-    def send_message(self):
+    def send_message(self, text: str, chat_id: str):
         """
         Отправка сообщений пользователю
         """
         mail = requests.post(
             url=f'{self.URL}{self.TOKEN}/sendMessage',
             data={
-                'chat_id': self.chat_id,
-                'text': self.text
+                'chat_id': chat_id,
+                'text': text
             }
         )
         return mail
 
 
 class MixinTestCaseCreateUser:
-    def create_user(self, email, password):
-        user, created = User.objects.get_or_create(
+    def create_user_test(self, email, password):
+        user = User.objects.create_user(
             email=email,
-            is_active=True,
+            password=password,
             chat_id_tg=settings.CHAT_ID_TG_TEST
         )
-        if created or not user.check_password(password):
-            user.set_password(password)
-            user.save()
 
         data = {
             "email": email,

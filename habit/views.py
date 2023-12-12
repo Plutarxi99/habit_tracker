@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from habit.models import Habit
 from habit.permissions import IsUserCreator, IsPublicHabit
-from habit.piganators import HabitPaginator
+from habit.paginator import HabitPaginator
 from habit.serializers import HabitSerializer, HabitCreateSerializer, PublicHabitListSerializer, MyHabitListSerializer, \
     HabitUpdateSerializer
 
@@ -32,7 +32,6 @@ class MyHabitListAPIView(ListAPIView):
     """
     queryset = Habit.objects.all()
     serializer_class = MyHabitListSerializer
-    pagination_class = HabitPaginator
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['is_public', 'is_pretty']
     ordering_fields = ['time_to_do']
@@ -51,20 +50,11 @@ class PublicHabitListAPIView(ListAPIView):
     """
     Отображение списка опубликованных привычек в приложении
     """
-    queryset = Habit.objects.all()
+    queryset = Habit.objects.filter(is_public=True)
     serializer_class = PublicHabitListSerializer
-    pagination_class = HabitPaginator
-    # permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['user', 'is_pretty']
     ordering_fields = ['time_to_do']
-
-    def get_queryset(self):
-        """
-        Привычки пользователя
-        """
-        queryset = super().get_queryset()
-        return queryset.filter(is_public=True)
 
 
 class HabitRetrieveAPIView(RetrieveAPIView):

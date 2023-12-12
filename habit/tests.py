@@ -16,25 +16,12 @@ class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
     email_3 = 'test_3@test.test'
 
     def setUp(self):
-        user, created = User.objects.get_or_create(
+        user_data_setup = self.create_user_test(
             email=self.email,
-            is_active=True,
-            chat_id_tg=settings.CHAT_ID_TG_TEST
+            password=self.password,
         )
-        if created or not user.check_password(self.password):
-            user.set_password(self.password)
-            user.save()
-
-        self.user = user
-        data = {
-            "email": self.email,
-            "password": self.password
-        }
-        response = self.client.post(
-            reverse('users:token_obtain_pair'),
-            data=data
-        )
-        self.token = response.json()['access']
+        self.user = user_data_setup['user']
+        self.token = user_data_setup['token']
 
         self.habit = Habit.objects.create(
             is_pretty=False,
@@ -78,7 +65,7 @@ class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
 
     def test_habit_create(self):
         """Создание новой привычки"""
-        user_data = self.create_user(email=self.email_1, password=self.password)
+        user_data = self.create_user_test(email=self.email_1, password=self.password)
         data = {
             "is_pretty": False,
             "award": "яблоко",
@@ -122,7 +109,7 @@ class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
 
     def test_habit_my_list(self):
         """ Тестирование списка моих привычек """
-        user_data_my = self.create_user(email=self.email_2, password=self.password)
+        user_data_my = self.create_user_test(email=self.email_2, password=self.password)
         self.habit = Habit.objects.create(
             is_pretty=False,
             award="тест ОК",
@@ -154,7 +141,7 @@ class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
     def test_my_habit_destroy(self):
         """ Тестирование удаление привычки"""
 
-        user_data_des = self.create_user(email=self.email_1, password=self.password)
+        user_data_des = self.create_user_test(email=self.email_1, password=self.password)
 
         habit_pk_4 = Habit.objects.create(
             is_pretty=False,
@@ -181,7 +168,7 @@ class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
 
     def test_alien_habit_destroy(self):
         """ Удаление чужой привычки """
-        user_data_des = self.create_user(email=self.email_1, password=self.password)
+        user_data_des = self.create_user_test(email=self.email_1, password=self.password)
 
         pk = 1
         response = self.client.delete(
@@ -196,7 +183,7 @@ class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
 
     def test_my_habit_update(self):
         """Тестирование обновление моей привычки"""
-        user_data_upd = self.create_user(email=self.email_3, password=self.password)
+        user_data_upd = self.create_user_test(email=self.email_3, password=self.password)
         habit_update = Habit.objects.create(
             is_pretty=False,
             award="тест ОК",
@@ -226,7 +213,7 @@ class HabitTestCase(MixinTestCaseCreateUser, APITestCase):
 
     def test_alien_habit_update(self):
         """Тестирование обновление чужой привычки"""
-        user_data_upd = self.create_user(email=self.email_3, password=self.password)
+        user_data_upd = self.create_user_test(email=self.email_3, password=self.password)
         data = {
             "action_to_do": "обновление"
         }

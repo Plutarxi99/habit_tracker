@@ -8,12 +8,8 @@ class Command(BaseCommand):
     # Создание суперюзера из-за того, что мы переопределили создание юзера. Мы не можно создать его командой createsuperuser
 
     def handle(self, *args, **options):
-        user, created = User.objects.get_or_create(
+        User.objects.create_superuser(
             email=settings.SUPERUSER_EMAIL,
-            is_staff=True,
-            is_superuser=True,
-            is_active=True,
+            password=settings.SUPERUSER_PASSWORD,
+            chat_id_tg=settings.CHAT_ID_TG_TEST
         )
-        if created or not user.check_password(settings.SUPERUSER_PASSWORD):
-            user.set_password(settings.SUPERUSER_PASSWORD)
-            user.save()
