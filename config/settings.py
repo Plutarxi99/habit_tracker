@@ -169,6 +169,8 @@ CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
+CHAT_ID_TG_TEST = os.getenv("CHAT_ID_TG_TEST")
+
 # Для сохранения задач, если прекращен процесс
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 

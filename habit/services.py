@@ -2,6 +2,12 @@ import requests
 from django.conf import settings
 import datetime
 import time
+
+from django.urls import reverse
+
+from users.models import User
+
+
 #
 # from rest_framework import serializers
 # from rest_framework.relations import SlugRelatedField
@@ -24,6 +30,7 @@ class MixinListSerializer:
     """
     Миксин для комфортного отображения данных для пользователя
     """
+
     def to_representation(self, instance):
         representation = super(MixinListSerializer, self).to_representation(instance)
         representation['time_to_do'] = instance.time_to_do.strftime('%d.%m.%Y %H:%M:%S')
@@ -46,10 +53,38 @@ class MyBot:
         """
         Отправка сообщений пользователю
         """
-        requests.post(
+        mail = requests.post(
             url=f'{self.URL}{self.TOKEN}/sendMessage',
             data={
                 'chat_id': self.chat_id,
                 'text': self.text
             }
         )
+        return mail
+
+
+class MixinTestCaseCreateUser:
+    def create_user(self, email, password):
+        user, created = User.objects.get_or_create(
+            email=email,
+            is_active=True,
+            chat_id_tg=settings.CHAT_ID_TG_TEST
+        )
+        if created or not user.check_password(password):
+            user.set_password(password)
+            user.save()
+
+        data = {
+            "email": email,
+            "password": password
+        }
+
+        response = self.client.post(
+            reverse('users:token_obtain_pair'),
+            data=data
+        )
+        token = response.json()['access']
+        return {
+            "user": user,
+            "token": token
+        }
