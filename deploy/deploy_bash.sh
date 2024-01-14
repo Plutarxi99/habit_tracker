@@ -1,1 +1,1 @@
-sudo apt install mc python3-venv postgresql postgresql-contrib nginx && cp -r habit_tracker /etc/nginx/sites-available/ && cp -r habit_tracker.service /etc/systemd/system/ && systemctl restart nginx
+sudo apt install mc python3-venv postgresql postgresql-contrib nginx docker docker-compose && cp -r habit_tracker /etc/nginx/sites-available/ && cp -r habit_tracker.service /etc/systemd/system/ && systemctl restart nginx
