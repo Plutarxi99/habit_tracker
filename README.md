@@ -83,3 +83,22 @@
 * Подключена django_celery для создание и использование отложенной задачи
 * Обложил тестами CRUD привычек.
 </details>
+
+<details>
+
+<summary>Запуск приложения на удаленном сервере из docker</summary>
+
+* Устанавливаем виртуальное окружение на сервере:
+  <pre><code>sudo apt install python3-venv</code></pre>
+
+* Переходим в папку где будет лежать код:
+  <pre><code>cd /var/www/html/</code></pre>
+
+* Создаем виртуальное окружение:
+  <pre><code>python3 -m venv env</code></pre>
+  <pre><code>source env/bin/activate</code></pre>
+  
+* Копируем .env файл свои значения переменных и поменять в файле проекта deploy/habit_tracker: server_name <HOST_IP>;
+
+
+</details>
