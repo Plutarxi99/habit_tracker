@@ -1,1 +1,1 @@
-sudo apt install mc postgresql postgresql-contrib nginx && cp -r habit_tracker /etc/nginx/sites-available/shelter && cp -r habit_tracker.service /etc/systemd/system/shelter.service && systemctl restart nginx && systemctl status habit_trcker
+cp -r habit_tracker /etc/nginx/sites-available/shelter && cp -r habit_tracker.service /etc/systemd/system/shelter.service && systemctl restart nginx
