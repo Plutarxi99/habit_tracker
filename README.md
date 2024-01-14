@@ -90,8 +90,13 @@
 
 * Переходим в папку где будет лежать код:
   <pre><code>cd /var/www/html/</code></pre>
+
+* Копируем код с git:
+  <pre><code>git clone <URL on GIT></code></pre>
   
 * Копируем .env файл свои значения переменных и поменять в файле проекта deploy/habit_tracker: server_name <HOST_IP>;
+
+
 * Далее выполнить bash команда на установку нужных компанентов и копирование настроек сайта для его работы:
   <pre><code>cd /var/www/html/habit_tracker/deploy/</code></pre>
   <pre><code>sh deploy_bash.sh</code></pre>
