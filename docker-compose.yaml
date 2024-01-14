@@ -12,9 +12,9 @@ services:
     container_name: db
     environment:
       POSTGRES_PASSWORD: ${PASSWORD_BD}
-      PGDATA: $PGDATA
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - pg_data:$PGDATA
+      - pg_data:/var/lib/postgresql/data/pgdata
     ports:
       - '5434:5432'
     healthcheck:
@@ -50,7 +50,7 @@ services:
     depends_on:
       migrations:
         condition: service_completed_successfully
-#    platform: linux/arm64/v8
+    platform: linux/arm64/v8
     healthcheck:
       test: "curl --fail  http://127.0.0.1:8000/swagger/"
       interval: 15s
