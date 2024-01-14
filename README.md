@@ -88,17 +88,23 @@
 
 <summary>Запуск приложения на удаленном сервере из docker</summary>
 
-* Устанавливаем виртуальное окружение на сервере:
-  <pre><code>sudo apt install python3-venv</code></pre>
-
 * Переходим в папку где будет лежать код:
   <pre><code>cd /var/www/html/</code></pre>
+  
+* Копируем .env файл свои значения переменных и поменять в файле проекта deploy/habit_tracker: server_name <HOST_IP>;
+* Далее выполнить bash команда на установку нужных компанентов и копирование настроек сайта для его работы:
+  <pre><code>cd /var/www/html/habit_tracker/deploy/</code></pre>
+  <pre><code>sh deploy_bash.sh</code></pre>
 
 * Создаем виртуальное окружение:
   <pre><code>python3 -m venv env</code></pre>
   <pre><code>source env/bin/activate</code></pre>
+
+* Создаем контейнер:
+  <pre><code>docker-compose build</code></pre>
   
-* Копируем .env файл свои значения переменных и поменять в файле проекта deploy/habit_tracker: server_name <HOST_IP>;
+* Поднимаем контейнер в фоновом режиме:
+  <pre><code>docker-compose up -d</code></pre>
 
 
 </details>
