@@ -1,1 +1,1 @@
-cp -r habit_tracker /etc/nginx/sites-available/shelter && cp -r habit_tracker.service /etc/systemd/system/shelter.service && systemctl restart nginx
+sudo apt install mc python3-venv postgresql postgresql-contrib nginx && cp -r habit_tracker /etc/nginx/sites-available/ && cp -r habit_tracker.service /etc/systemd/system/ && systemctl restart nginx
