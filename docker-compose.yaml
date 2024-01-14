@@ -1,0 +1,88 @@
+version: '3.10'
+
+services:
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - '6380:6379'
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: ${PASSWORD_BD}
+      PGDATA: $PGDATA
+    volumes:
+      - pg_data:$PGDATA
+    ports:
+      - '5434:5432'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres"]
+      interval: 15s
+      timeout: 2s
+      retries: 5
+
+  migrations:
+    container_name: migrations
+    tty: true
+    env_file:
+      - .env
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: sh -c "sleep 5 && python3 manage.py migrate"
+
+  app:
+    container_name: app
+    build: .
+    tty: true
+    env_file:
+      - .env
+    command: sh -c 'python3 manage.py runserver 0.0.0.0:8000'
+    ports:
+      - '8080:8000'
+    volumes:
+      - .:/code
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+    platform: linux/arm64/v8
+    healthcheck:
+      test: "curl --fail  http://127.0.0.1:8000/swagger/"
+      interval: 15s
+      timeout: 2s
+      retries: 2
+
+  celery:
+    container_name: celery
+    build: .
+    env_file:
+      - .env
+    tty: true
+    command: celery -A config worker -l INFO
+    depends_on:
+      app:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  celery_beat:
+    container_name: celery_beat
+    build: .
+    env_file:
+      - .env
+    restart: always
+    tty: true
+    command: celery -A config beat -l INFO -S django
+    depends_on:
+      app:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  pg_data:

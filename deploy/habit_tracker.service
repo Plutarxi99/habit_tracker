@@ -1,0 +1,13 @@
+# /etc/systemd/system/habit_tracker.service
+[Unit]
+Description=habit_tracker daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/html/habit_tracker/
+ExecStart=/var/www/html/habit_tracker/env/bin/gunicorn --access-logfile - --workers 3 --bind unix:/var/www/html/habit_tracker/habit_tracker.sock config.wsgi
+
+[Install]
+WantedBy=multi-user.target
