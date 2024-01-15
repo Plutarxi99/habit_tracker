@@ -52,11 +52,6 @@ services:
     depends_on:
       migrations:
         condition: service_completed_successfully
-    healthcheck:
-      test: "curl --fail  http://localhost:8000/swagger/"
-      interval: 15s
-      timeout: 2s
-      retries: 2
 
   celery:
     container_name: celery
@@ -67,7 +62,7 @@ services:
     command: celery -A config worker -l INFO
     depends_on:
       app:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_started
 
@@ -81,7 +76,7 @@ services:
     command: celery -A config beat -l INFO -S django
     depends_on:
       app:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_started
 
