@@ -37,15 +37,25 @@
 
 | Значение | Содержание | Примечание |
 |-----|-----------|-----:|
-|     **DATABASE_LOGIN**| <pre><code>'{"ENGINE": "django.db.backends.postgresql","NAME": "django_proj_educ","USER": "postgres",}'</code></pre> |     словарь для подключения к базе данных. P.S. не забудь создать ее|
+|     **ENGINE_DB**| <pre><code>django.db.backends.postgresql</code></pre> |     для подключения к базе данных Postgresql. P.S. не забудь создать ее|
 |     **SECRET_KEY**| django-insecure-hu213gr51uh234gbrtf34oqufg35835g3q5g       |     код генерируется автоматически при создании приложения|
+|     **NAME_BD**| NAME_BD   |     название базы данных |
+|     **NAME_BD_DOCKER**| NAME_BD_DOCKER   |     название базы данных для контейнера |
+|     **USER_BD**| USER_BD   |     название пользователя базы данных |
+|     **PASSWORD_BD**| PASSWORD_BD   |     пароль базы данных |
+|     **HOST_BD**| HOST_BD   |     название твоего сервиса используемый для контейнеризации |
+|     **PGDATA**| /here/   |     сохранения данных после перезапуска контейнера твоих данных |
 |     **SUPERUSER_EMAIL**| email_superuser       |     установить почту суперюзера|
 |     **SUPERUSER_PASSWORD**| password_superuser       |     установить пароль суперюзера|
 |     **USER_PASSWORD**| password_user       |     установить пароль юзера|
 |     **TELEGRAM_TOKEN**| 1234567899:QWERTYUIOPSSDFGHJKLZXCVBNM<>QWERTYU         |     телеграмм токен полученный от Bot_Father|
-|     **CELERY_BROKER_URL**| <pre><code>redis://127.0.0.1:6379</code></pre>    |     база данных для работы celery|
-|     **CELERY_RESULT_BACKEND**| <pre><code>redis://127.0.0.1:6379</code></pre>    |     база данных для работы celery|
+|     **CELERY_BROKER_URL_LOCAL**| <pre><code>redis://127.0.0.1:6379</code></pre>    |     база данных для работы celery|
+|     **CELERY_RESULT_BACKEND_LOCAL**| <pre><code>redis://127.0.0.1:6379</code></pre>    |     база данных для работы celery|
+|     **CELERY_BROKER_URL_DOCKER**| <pre><code>redis://redis:6379</code></pre>    |     база данных для работы celery в контейнере|
+|     **CELERY_RESULT_BACKEND_DOCKER**| <pre><code>redis://redis:6379</code></pre>    |     база данных для работы celery в контейнере|
 |     **CHAT_ID_TG_TEST**| 123456789   |     получение chat id пользователя для работы кастомной команды проверки бота|
+|     **ENV_TYPE**| local/server   |     для использования разных настроек для запуска локально-local для запуска с сервера-server |
+|     **HOST_IP**| 0.0.0.0   |     id- адрес твоего сервера базы данных |
 </details>
 
 <details>
