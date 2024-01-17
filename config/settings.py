@@ -94,33 +94,30 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': ast.literal_eval(os.getenv('DATABASE_LOGIN'))
-# }
 if ENV_TYPE == 'local':
     DATABASES = {
         'default': {
-            "ENGINE": os.getenv("ENGINE_DB"),
-            "NAME": os.getenv("NAME_BD"),
-            "USER": os.getenv("USER_BD"),
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
         }
     }
 elif ENV_TYPE == 'server':
     DATABASES = {
         'default': {
-            "ENGINE": os.getenv("ENGINE_DB"),
-            "NAME": os.getenv("NAME_BD_DOCKER"),
-            "USER": os.getenv("USER_BD"),
-            'PASSWORD': os.getenv("PASSWORD_BD"),
-            'HOST': os.getenv("HOST_BD")
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+            'HOST': os.getenv("POSTGRES_HOST")
         }
     }
 else:
     DATABASES = {
         'default': {
-            "ENGINE": os.getenv("ENGINE_DB"),
-            "NAME": os.getenv("NAME_BD"),
-            "USER": os.getenv("USER_BD"),
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
         }
     }
 # Password validation
