@@ -37,14 +37,11 @@
 
 | Значение | Содержание | Примечание |
 |-----|-----------|-----:|
-|     **ENGINE_DB**| <pre><code>django.db.backends.postgresql</code></pre> |     для подключения к базе данных Postgresql. P.S. не забудь создать ее|
 |     **SECRET_KEY**| django-insecure-hu213gr51uh234gbrtf34oqufg35835g3q5g       |     код генерируется автоматически при создании приложения|
-|     **NAME_BD**| NAME_BD   |     название базы данных |
-|     **NAME_BD_DOCKER**| NAME_BD_DOCKER   |     название базы данных для контейнера |
-|     **USER_BD**| USER_BD   |     название пользователя базы данных |
-|     **PASSWORD_BD**| PASSWORD_BD   |     пароль базы данных |
-|     **HOST_BD**| HOST_BD   |     название твоего сервиса используемый для контейнеризации |
-|     **PGDATA**| /here/   |     сохранения данных после перезапуска контейнера твоих данных |
+|     **POSTGRES_DB**| NAME_BD   |     название базы данных |
+|     **POSTGRES_USER**| USER_BD   |     название пользователя базы данных |
+|     **POSTGRES_PASSWORD**| PASSWORD_BD   |     пароль базы данных |
+|     **POSTGRES_HOST**| HOST_BD   |     название твоего сервиса используемый для контейнеризации |
 |     **SUPERUSER_EMAIL**| email_superuser       |     установить почту суперюзера|
 |     **SUPERUSER_PASSWORD**| password_superuser       |     установить пароль суперюзера|
 |     **USER_PASSWORD**| password_user       |     установить пароль юзера|
