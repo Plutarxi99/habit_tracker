@@ -30,12 +30,12 @@ class Command(BaseCommand):
 
             if admin:
                 user, created = User.objects.get_or_create(
-                    email=email,
+                    email=settings.SUPERUSER_EMAIL,
                     is_staff=True,
                     is_superuser=True,
                     is_active=True,
                 )
-                if created or not user.check_password(raw_password=settings.USER_PASSWORD):
+                if created or not user.check_password(raw_password=settings.SUPERUSER_PASSWORD):
                     user.set_password(email)
                     user.save()
             else:
